@@ -76,3 +76,13 @@ The repo contains code snippets used in this [post](..medium post..).
     wait = WebDriverWait(driver, 10)
     wait.until(tap_is_successful(By.ID, "foo"))
 
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/170acf6b-8260-4960-bce4-e6de9f3e1b6d)
+
+    def test_login_explicit_wait():
+        wait = WebDriverWait(driver, 10)
+        
+        wait.until(expected_conditions.presence_of_element_located(login_screen)).click()
+        wait.until(expected_conditions.presence_of_element_located(username)).send_keys(AUTH_USER)
+        wait.until(expected_conditions.presence_of_element_located(password)).send_keys(AUTH_PASS)
+        wait.until(expected_conditions.presence_of_element_located(login_button)).click()
+        wait.until(expected_conditions.presence_of_element_located(get_logged_in_by(AUTH_USER)))
