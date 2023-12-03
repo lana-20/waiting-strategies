@@ -2,7 +2,7 @@
 The repo contains code snippets used in this [post](..medium post..).
 
 ### NoSuchElementException
-![image](https://github.com/lana-20/waiting-strategies/assets/70295997/e1c91c69-025f-4e77-9919-73266b3b8e3c)
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/05899874-b6b0-4909-b724-0fa4db1861e3)
 
     from selenium.common.exceptions import NoSuchElementException
     ...
@@ -20,7 +20,7 @@ The repo contains code snippets used in this [post](..medium post..).
             driver.quit()
 
 ### Static Wait
-![image](https://github.com/lana-20/waiting-strategies/assets/70295997/c8497e96-9f6a-4fde-81ae-3dde5f12b2bd)
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/6429abdc-b261-4015-aae9-cb45d3714c74)
 
     def test_login_static_wait():
         time.sleep(3000)
@@ -35,7 +35,7 @@ The repo contains code snippets used in this [post](..medium post..).
         driver.find_element(get_logged_in_by(AUTH_USER))
 
 ### Implicit Wait
-![image](https://github.com/lana-20/waiting-strategies/assets/70295997/a1ed2899-c587-4d12-a974-5c04a1da94b0)
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/f5aa8df6-50e7-4774-b1fe-4cdb5a9b2be0)
 
     def test_login_implicit_wait():
         driver.implicitly_wait(10)
@@ -48,7 +48,19 @@ The repo contains code snippets used in this [post](..medium post..).
 
 ### Explicit Wait
 
-![image](https://github.com/lana-20/waiting-strategies/assets/70295997/e0f1b38b-b76e-4e37-b929-712fa63641f5)
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/3bfe07c0-437c-4802-8720-8e0f46fdca78)
+
+    def test_login_explicit_wait():
+        wait = WebDriverWait(driver, 10)
+        
+        wait.until(expected_conditions.presence_of_element_located(login_screen)).click()
+        wait.until(expected_conditions.presence_of_element_located(username)).send_keys(AUTH_USER)
+        wait.until(expected_conditions.presence_of_element_located(password)).send_keys(AUTH_PASS)
+        wait.until(expected_conditions.presence_of_element_located(login_button)).click()
+        wait.until(expected_conditions.presence_of_element_located(get_logged_in_by(AUTH_USER)))
+
+
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/fcaf993e-93de-4545-b8a3-aa9140691c08)
 
     from selenium.webdriver.common.by import By
     from selenium.webdriver.support.ui import WebDriverWait
@@ -58,7 +70,9 @@ The repo contains code snippets used in this [post](..medium post..).
         EC.presence_of_element_located((By.ID, "foo"))
         )
 
-![image](https://github.com/lana-20/waiting-strategies/assets/70295997/5ac74e68-76e8-4cd6-8aa1-5af9beaf7eeb)
+### Custom Explicit Wait
+
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/aaf23590-5508-49a0-a937-d7851f6f6c67)
 
     class tap_is_successful(object):
         
@@ -76,13 +90,40 @@ The repo contains code snippets used in this [post](..medium post..).
     wait = WebDriverWait(driver, 10)
     wait.until(tap_is_successful(By.ID, "foo"))
 
-![image](https://github.com/lana-20/waiting-strategies/assets/70295997/170acf6b-8260-4960-bce4-e6de9f3e1b6d)
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/e543b9b0-8bcf-4681-803e-4f436e5d7d62)
 
-    def test_login_explicit_wait():
+    class element_found_and_clicked(object):
+        
+        def __init__(self, locator):
+            self.locator = locator
+            
+            def __call__(self, driver):
+                try:
+                    element = driver.find_element(*self.locator)
+                    element.click()
+                    return True
+                except:
+                    return False
+
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/1762bbd3-f124-44cb-87f1-c02caf5d6a0a)
+
+    def test_login_custom_wait():
         wait = WebDriverWait(driver, 10)
         
-        wait.until(expected_conditions.presence_of_element_located(login_screen)).click()
+        wait.until(element_found_and_clicked(login_screen))
         wait.until(expected_conditions.presence_of_element_located(username)).send_keys(AUTH_USER)
         wait.until(expected_conditions.presence_of_element_located(password)).send_keys(AUTH_PASS)
-        wait.until(expected_conditions.presence_of_element_located(login_button)).click()
-        wait.until(expected_conditions.presence_of_element_located(get_logged_in_by(AUTH_USER)))
+        wait.until(element_found_and_clicked(login_button))
+        wait.until(expected_conditions.presence_of_element_located(get_logged_in_by(AUTH_USER))) 
+
+### Fluent Wait
+
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/4356ae91-dc93-4e8e-b94f-c98b9dc380a1)
+
+    wait = WebDriverWait(
+        driver, timeout=10, poll_frequency=2, ignored_exceptions=ignore_list
+        )
+
+
+
+
