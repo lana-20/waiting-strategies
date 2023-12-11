@@ -20,18 +20,19 @@ The repo contains code snippets used in this [post](..medium post..).
             driver.quit()
 
 ### Static Wait
-![image](https://github.com/lana-20/waiting-strategies/assets/70295997/6429abdc-b261-4015-aae9-cb45d3714c74)
+
+![image](https://github.com/lana-20/waiting-strategies/assets/70295997/1de4f618-d576-4d24-9e00-45a3418b395d)
 
     def test_login_static_wait():
-        time.sleep(3000)
+        time.sleep(3)
         driver.find_element(login_screen).click()
         
-        time.sleep(3000)
+        time.sleep(3)
         driver.find_element(username).send_keys(AUTH_USER)
         driver.find_element(password).send_keys(AUTH_PASS)
         driver.find_element(login_button).click()
         
-        time.sleep(3000)
+        time.sleep(3)
         driver.find_element(get_logged_in_by(AUTH_USER))
 
 ### Implicit Wait
